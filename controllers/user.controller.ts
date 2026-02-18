@@ -41,7 +41,6 @@ const create_user = async (req: any, res: any) => {
                         user_id: user.user_id,
                         transaction_type: "CREATE_USER",
                         amount: 1,
-                        currency_type: "USER",
                     }
                 })
                 console.log('Transaction log for user creation:', update_to_transaction);

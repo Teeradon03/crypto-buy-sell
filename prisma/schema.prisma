@@ -44,7 +44,6 @@ enum p2p_type {
 enum currency_type {
   FIAT
   CRYPTO
-  USER
 }
 
 /// สร้าง database โมเดลสำหรับผู้ใช้
@@ -167,7 +166,7 @@ model Transaction {
   transaction_id   Int              @id @default(autoincrement())
   transaction_type transaction_type
   amount           Float
-  currency_type    currency_type
+  currency_type    currency_type?
   created_at       DateTime         @default(now())
 
   user    User @relation(fields: [user_id], references: [user_id])

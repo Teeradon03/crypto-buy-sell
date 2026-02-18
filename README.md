@@ -14,22 +14,23 @@
 หากต้องการรันโปรเจกต์นี้ในเครื่อง ให้ทำตามขั้นตอนดังนี้:
 
 1. Clone โปรเจกต์:
-   git clone https://github.com/Teeradon03/crypto-buy-sell.git
+
+$ git clone https://github.com/Teeradon03/crypto-buy-sell.git
 
 2. เพิ่มไฟล์ .env สำหรับเก็บ database URL
-   DATABASE_URL="postgresql://myuser:mypassword@localhost:5432/mydatabase"
+   $ DATABASE_URL="postgresql://myuser:mypassword@localhost:5432/mydatabase"
 
 3. ติดตั้ง package
-   npm i
+   $ npm i
 
 4. ทำการรันตัว database ด้วยคำสั่ง
-   docker compose up -d
+   $ docker compose up -d
 
 5. ทำการ Migrate ตัว database ด้วยคำสั่ง
-   npx prisma migrate dev --name init
+   $ npx prisma migrate dev --name init
 
 6. ทำการรัน project ด้วยคำสั่ง
-   npm run dev
+   $ npm run dev
 
 7. สำหรับการรันไฟล์ seed สำหรับเพิ่มข้อมูล ใช้คำสั่ง
-   npx prisma db seed
+   $ npx prisma db seed
