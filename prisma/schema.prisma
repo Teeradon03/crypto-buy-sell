@@ -77,7 +77,6 @@ model Fiat {
 model Crypto {
   crypto_id Int    @id @default(autoincrement())
   symbol    String @unique
-  network   String
 
   crypto_wallet Crypto_wallet[]
   orders        Order[]
