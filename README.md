@@ -29,6 +29,7 @@ $ git clone https://github.com/Teeradon03/crypto-buy-sell.git
 
 5. ทำการ Migrate ตัว database ด้วยคำสั่ง
    $ npx prisma migrate dev --name init
+   $ npx prisma generate
 
 6. ทำการรัน project ด้วยคำสั่ง
    $ npm run dev
