@@ -1,0 +1,18 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+package-lock.json 
+
+/generated/prisma
+
+
+# The output directory (e.g., 'dist', 'build', 'out')
+dist/
+build/
+out/
+*.js.map
+*.d.ts.map
+# If you use the root directory for output
+lib/*.js
+test/*.js

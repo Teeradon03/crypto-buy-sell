@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// ประกาศ enum สำหรับประเภทของสกุลเงิน
+enum order_type {
+  BUY
+  SELL
+}
+
+/// ประกาศ enum สำหรับสถานะของคำสั่งซื้อขาย
+enum order_status {
+  OPEN
+  MATCHED
+  CANCELED
+}
+
+/// ประกาศ enum สำหรับ transaction type
+enum transaction_type {
+  FIAT_DEPOSIT
+  FIAT_WITHDRAWAL
+  TRANSFER
+  BUY
+  SELL
+  CREATE_USER
+  ADD_CRYPTO
+  ADD_SYMBOL
+  ADD_FIAT
+}
+
+/// enum สำหรับประเภทของการซื้อขายใน p2p
+enum p2p_type {
+  CRETAED /// คำสั่งซื้อขายถูกสร้างขึ้น 
+  PAID /// ผู้ซื้อหรือขาย ทำการชำระเงินแล้ว
+  COMPLETED /// รายการซื้อขายเสร็จสมบูรณ์
+}
+
+/// enum สำหรับประเภทของสกุลเงินใน transaction
+enum currency_type {
+  FIAT
+  CRYPTO
+  USER
+}
+
+/// สร้าง database โมเดลสำหรับผู้ใช้
+model User {
+  user_id    Int      @id @default(autoincrement())
+  email      String   @unique
+  name       String
+  password   String
+  address    String
+  created_at DateTime @default(now())
+
+  //// สำหรับความสัมพันธ์
+  fiat_wallet   Fiat_wallet[]
+  crypto_wallet Crypto_wallet[]
+  order         Order[]
+  transaction   Transaction[]
+  p2p           P2p[]
+  backAccounts  Back_account[]
+}
+
+model Fiat {
+  fiat_id  Int    @id @default(autoincrement())
+  currency String @unique
+
+  fiat_wallet Fiat_wallet[]
+  orders      Order[]
+  p2Ps        P2p[]
+}
+
+model Crypto {
+  crypto_id Int    @id @default(autoincrement())
+  symbol    String @unique
+  network   String
+
+  crypto_wallet Crypto_wallet[]
+  orders        Order[]
+  p2Ps          P2p[]
+}
+
+model Fiat_wallet {
+  fiat_wallet_id Int   @id @default(autoincrement())
+  balance        Float
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+
+  fiat    Fiat    @relation(fields: [fiat_id], references: [fiat_id])
+  fiat_id Int
+  orders  Order[]
+}
+
+model Crypto_wallet {
+  crypto_wallet_id Int   @id @default(autoincrement())
+  balance          Float
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+
+  crypto    Crypto  @relation(fields: [crypto_id], references: [crypto_id])
+  crypto_id Int
+  orders    Order[]
+}
+
+model Back_account {
+  back_account_id     Int      @id @default(autoincrement())
+  account_name        String
+  bank_account_number String
+  back_account_name   String
+  created_at          DateTime @default(now())
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+}
+
+model Order {
+  order_id     Int          @id @default(autoincrement())
+  order_type   order_type
+  amount       Float
+  price        Float
+  order_status order_status
+  created_at   DateTime     @default(now())
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+
+  fiat    Fiat @relation(fields: [fiat_id], references: [fiat_id])
+  fiat_id Int
+
+  fiat_wallet    Fiat_wallet @relation(fields: [fiat_wallet_id], references: [fiat_wallet_id])
+  fiat_wallet_id Int
+
+  crypto    Crypto @relation(fields: [crypto_id], references: [crypto_id])
+  crypto_id Int
+
+  crypto_wallet    Crypto_wallet @relation(fields: [crypto_wallet_id], references: [crypto_wallet_id])
+  crypto_wallet_id Int
+
+  // /// เอาไว้สำหรับกำหนดความสัมพันธ์ระหว่างคำสั่งซื้อขายที่เป็น buy หรือ sell Order กับตาราง Trade
+  // /// จะได้รู้ Order ไหนเป็น buy order หรือ sell order ในตาราง Trade
+  // buy_trades  Trade[] @relation("buy_order")
+  // sell_trades Trade[] @relation("sell_order")
+}
+
+model Trade {
+  trade_id  Int      @id @default(autoincrement())
+  amount    Float
+  price     Float
+  traded_at DateTime @default(now())
+
+  buy_order_id  Int
+  sell_order_id Int
+
+  // //// Role base relations สำหรับ buy sell order 
+  // //// เอาไว้กำหนดว่า buy order หรือ sell order เป็นของ order ไหนใน order
+
+  // buy_order  Order @relation("buy_order", fields: [buy_order_id], references: [order_id])
+  // sell_order Order @relation("sell_order", fields: [sell_order_id], references: [order_id])
+}
+
+model Transaction {
+  transaction_id   Int              @id @default(autoincrement())
+  transaction_type transaction_type
+  amount           Float
+  currency_type    currency_type
+  created_at       DateTime         @default(now())
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+}
+
+model P2p {
+  p2p_id Int @id @default(autoincrement())
+
+  order_type     order_type
+  amount         Float
+  price          Float
+  payment_method String
+  created_at     DateTime   @default(now())
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+
+  crypto    Crypto @relation(fields: [crypto_id], references: [crypto_id])
+  crypto_id Int
+
+  fiat    Fiat @relation(fields: [fiat_id], references: [fiat_id])
+  fiat_id Int
+
+  buy_p2p_order  P2p_order[] @relation("buy_p2p_order")
+  sell_p2p_order P2p_order[] @relation("sell_p2p_order")
+}
+
+model P2p_order {
+  p2p_order_id      Int @id @default(autoincrement())
+  buy_p2p_order_id  Int
+  sell_p2p_order_id Int
+
+  buy_p2p_order  P2p @relation("buy_p2p_order", fields: [buy_p2p_order_id], references: [p2p_id])
+  sell_p2p_order P2p @relation("sell_p2p_order", fields: [sell_p2p_order_id], references: [p2p_id])
+}

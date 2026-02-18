@@ -1,0 +1,21 @@
+services:
+# ส่วนของ Database
+  db:
+    # Use the official postgres image from Docker Hub
+    image: postgres:16.2-alpine
+    restart: always
+    # Map port 5432 on the host to port 5432 in the container
+    ports:
+      - "5432:5432"
+    # Set environment variables for database configuration
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: database
+    # Persist data outside the container
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+# Define the volume
+volumes:
+  db_data:
