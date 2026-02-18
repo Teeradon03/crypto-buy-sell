@@ -13,6 +13,7 @@
 
 หากต้องการรันโปรเจกต์นี้ในเครื่อง ให้ทำตามขั้นตอนดังนี้:
 
+```bash
 1. Clone โปรเจกต์:
 
 $ git clone https://github.com/Teeradon03/crypto-buy-sell.git
@@ -34,3 +35,4 @@ $ git clone https://github.com/Teeradon03/crypto-buy-sell.git
 
 7. สำหรับการรันไฟล์ seed สำหรับเพิ่มข้อมูล ใช้คำสั่ง
    $ npx prisma db seed
+```
