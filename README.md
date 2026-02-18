@@ -36,8 +36,3 @@ $ git clone https://github.com/Teeradon03/crypto-buy-sell.git
 7. สำหรับการรันไฟล์ seed สำหรับเพิ่มข้อมูล ใช้คำสั่ง
    $ npx prisma db seed
 ```
-
-# สำหรับ API
-
-- user
-  /api/user/craete-user
