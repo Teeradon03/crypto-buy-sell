@@ -142,8 +142,8 @@ model Order {
 
   // /// เอาไว้สำหรับกำหนดความสัมพันธ์ระหว่างคำสั่งซื้อขายที่เป็น buy หรือ sell Order กับตาราง Trade
   // /// จะได้รู้ Order ไหนเป็น buy order หรือ sell order ในตาราง Trade
-  // buy_trades  Trade[] @relation("buy_order")
-  // sell_trades Trade[] @relation("sell_order")
+  buy_trades  Trade[] @relation("buy_order")
+  sell_trades Trade[] @relation("sell_order")
 }
 
 model Trade {
@@ -158,8 +158,8 @@ model Trade {
   // //// Role base relations สำหรับ buy sell order 
   // //// เอาไว้กำหนดว่า buy order หรือ sell order เป็นของ order ไหนใน order
 
-  // buy_order  Order @relation("buy_order", fields: [buy_order_id], references: [order_id])
-  // sell_order Order @relation("sell_order", fields: [sell_order_id], references: [order_id])
+  buy_order  Order @relation("buy_order", fields: [buy_order_id], references: [order_id])
+  sell_order Order @relation("sell_order", fields: [sell_order_id], references: [order_id])
 }
 
 model Transaction {
